@@ -10,5 +10,6 @@ app.use(express.json) //para que express sepa cuando le mando informacion en el 
 app.use("/movies",MovieRouter)
 app.use("/users", UsersRoutes)
 
+
 export default app
 

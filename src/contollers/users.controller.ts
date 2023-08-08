@@ -1,105 +1,112 @@
 import { Request, Response } from "express"
 import UserModel from "../model/user.model";
 import { set } from "mongoose";
+import prisma from "../db/ClientPrisma";
 
 
-export const createUser = async (req: Request, res: Response) =>{
+export const createUser = async (req: Request, res: Response) => {
 
-    const {name, email, password} = req.body;
+    const { name, email, password } = req.body;
 
-    try{
+    try {
 
-        if (!name || email || password){
+        if (!name || email || password) {
 
-            res.status(400).json({eror: "Missing required fields"});
+            res.status(400).json({ eror: "Missing required fields" });
             return;
         }
 
-        const newUser = await UserModel.create({
-            name,
-            email,
-            password
+        const newUser = await prisma.user.create({
+
+            data: {
+                name,
+                email,
+                password
+            }
+
         }) // una vez creado el usuario esto nos va a devolver los datos del usuario en mongo, y ya los podriamos manipular o mandar al usuario por ejemplo
 
         res.status(200).send(newUser)
 
-    }catch (error) {
+    } catch (error) {
 
         res.status(500).send(error)
     }
 
-} 
+}
 
-export const getAllUsers = async (req:Request, res:Response)  =>{
+export const getAllUsers = async (req: Request, res: Response) => {
 
-    try{
+    try {
 
-        const allUsers = await UserModel.find()
+        const allUsers = await prisma.user.findMany()
 
         res.status(200).send(allUsers)
 
-    } catch (error){
+    } catch (error) {
 
         res.status(500).send(error)
     }
 }
 
-export const getUserById = async (req:Request, res:Response) =>{
+export const getUserById = async (req: Request, res: Response) => {
 
-    const {userId} = req.params;
+    const { userId } = req.params;
 
-    try{
+    try {
 
-        const user = await UserModel.findById({_id : userId}).populate("movies");
+        const user = await UserModel.findById({ _id: userId }).populate("movies");
 
         res.status(200).send(user);
 
-    } catch (error){
+    } catch (error) {
 
         res.status(500).send(error)
     }
 }
 
-export const updateUser = async (req: Request, res: Response) =>{
+export const updateUser = async (req: Request, res: Response) => {
 
-    const {userId} = req.params;
+    const { userId } = req.params;
 
-    const {name, email, password} = req.body;
+    const { name, email, password } = req.body;
 
-    try{
+    try {
 
-        const updatedUser = await UserModel.findByIdAndUpdate({_id: userId },// una vez creado el usuario esto nos va a devolver los datos del usuario en mongo, y ya los podriamos manipular o mandar al usuario por ejemplo
+        const updatedUser = await UserModel.findByIdAndUpdate({ _id: userId },// una vez creado el usuario esto nos va a devolver los datos del usuario en mongo, y ya los podriamos manipular o mandar al usuario por ejemplo
 
-        {$set : {
+            {
+                $set: {
 
-            name: name,
-            email: email,
-            password : password ,        
+                    name: name,
+                    email: email,
+                    password: password,
 
-        }},{new : true}) // la propiedad new se pone en true para asegurar de que devuelva el objeto una vez ya actualizado
+                }
+            }, { new: true }) // la propiedad new se pone en true para asegurar de que devuelva el objeto una vez ya actualizado
 
         res.status(200).send(updatedUser)
-        
-    }catch (error) {
+
+    } catch (error) {
 
         res.status(500).send(error)
     }
 
-} 
+}
 
-export const removeUser = async (req: Request, res: Response) =>{
+export const removeUser = async (req: Request, res: Response) => {
 
-    const {userId} = req.params;
+    const { userId } = req.params;
 
-    
 
-    try{
+
+    try {
 
         const userDeleted = await UserModel.findByIdAndDelete(userId) // una vez creado el usuario esto nos va a devolver los datos del usuario en mongo, y ya los podriamos manipular o mandar al usuario por ejemplo
 
         res.status(200).send(userDeleted)
-        
-    }catch (error) {
+
+    } catch (error) {
 
         res.status(500).send(error)
     }
