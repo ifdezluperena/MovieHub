@@ -1,6 +1,4 @@
 import { Request, Response } from "express"
-import UserModel from "../model/user.model";
-import { set } from "mongoose";
 import prisma from "../db/clientPrisma";
 
 export const createUser = async (req: Request, res: Response) => {
@@ -9,18 +7,18 @@ export const createUser = async (req: Request, res: Response) => {
 
     try {
 
-        if (!name || email || password) {
+        if (!name || !email || !password) {
 
-            res.status(400).json({ eror: "Missing required fields" });
+            res.status(400).json({ error: "Missing required fields" });
             return;
         }
 
         const newUser = await prisma.user.create({
 
             data: {
-                name,
-                email,
-                password
+                name: name,
+                email: email,
+                password: password
             }
 
         }) // una vez creado el usuario esto nos va a devolver los datos del usuario en mongo, y ya los podriamos manipular o mandar al usuario por ejemplo
@@ -59,6 +57,13 @@ export const getUserById = async (req: Request, res: Response) => {
             where: {
 
                 id: userId //Le decimos que cuando el id sea igual al userId nos lo traiga
+            },
+            include: {
+                movies: {
+                    select: {
+                        name: true
+                    }
+                } // que me invluya las peliculas asociadas a ese usuario, pero que muestre solamente el nombre de la pelicula
             }
         })
 
@@ -87,9 +92,9 @@ export const updateUser = async (req: Request, res: Response) => {
             },
             data: {
 
-                name,
-                email,
-                password
+                name: name,
+                email: email,
+                password: password
             }
         })
         res.status(200).send(updatedUser)
@@ -104,8 +109,6 @@ export const updateUser = async (req: Request, res: Response) => {
 export const removeUser = async (req: Request, res: Response) => {
 
     const { userId } = req.params;
-
-
 
     try {
 

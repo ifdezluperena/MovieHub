@@ -1,7 +1,5 @@
 import { Request, Response } from "express"
 import { send } from "process"
-import MoviesModel from "../model/movies.model";
-import UserModel from "../model/user.model";
 import prisma from "../db/clientPrisma";
 
 
@@ -27,8 +25,6 @@ export const createMovie = async (req: Request, res: Response) => {
             }
         });
 
-
-
         res.status(201).send(newMovie)
 
     } catch (error) {
@@ -38,26 +34,95 @@ export const createMovie = async (req: Request, res: Response) => {
 
 }
 
-export const updateMovie = (req: Request, res: Response) => {
+export const updateMovie = async (req: Request, res: Response) => {
 
-    res.status(200).send({ msg: "Movie updated" })
+    const { movieId } = req.params;
+
+    const { name, url, score } = req.body;
+
+    try {
+
+        const updatedMovie = await prisma.movie.update({
+
+            where: {
+
+                id: movieId
+            },
+            data: {
+                name: name,
+                url: url,
+                score: score
+            }
+        })
+
+
+
+        res.status(200).send(updatedMovie)
+
+    } catch (error) {
+
+        res.status(500).send(error)
+    }
 
 }
 
-export const removeMovie = (req: Request, res: Response) => {
+export const removeMovie = async (req: Request, res: Response) => {
 
-    res.status(200).send({ msg: "Movie removed" })
+    const { movieId } = req.params;
 
+    try {
+
+        await prisma.movie.delete({
+
+            where: {
+
+                id: movieId
+            }
+        })
+
+        res.status(200).send("Movie was deleted")
+
+    } catch (error) {
+
+        res.status(500).send(error)
+    }
 }
 
-export const getAllMovies = (req: Request, res: Response) => {
+export const getAllMovies = async (req: Request, res: Response) => {
 
-    res.status(200).send({ msg: "All movies" })
 
+    try {
+
+        const allMovies = await prisma.movie.findMany()
+
+
+        res.status(201).send(allMovies)
+
+    } catch (error) {
+
+        res.status(500).send(error)
+    }
 }
 
-export const getMovieById = (req: Request, res: Response) => {
+export const getMovieById = async (req: Request, res: Response) => {
 
-    res.status(200).send({ msg: "Movie  by id" })
+    const { movieId } = req.params;
+
+    try {
+
+        const movieById = await prisma.movie.findUnique({
+
+            where: {
+                id: movieId
+            }
+        })
+
+        res.status(200).send(movieById)
+
+    } catch (error) {
+
+        res.status(500).send(error)
+
+    }
 
 }
