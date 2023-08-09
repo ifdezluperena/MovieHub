@@ -15,6 +15,7 @@ model User {
   name      String
   email     String   @unique
   password  String
+  movies    Movie[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -23,6 +24,9 @@ model Movie {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   url       String   @unique
+  score     DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  User      User?    @relation(fields: [userId], references: [id]) // relacion entre movies y users, se crea automaticamente al meter el campo movies en el usermodel
+  userId    String?  @db.ObjectId
 }

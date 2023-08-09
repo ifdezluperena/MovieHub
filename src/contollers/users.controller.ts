@@ -1,8 +1,7 @@
 import { Request, Response } from "express"
 import UserModel from "../model/user.model";
 import { set } from "mongoose";
-import prisma from "../db/ClientPrisma";
-
+import prisma from "../db/clientPrisma";
 
 export const createUser = async (req: Request, res: Response) => {
 
@@ -55,7 +54,13 @@ export const getUserById = async (req: Request, res: Response) => {
 
     try {
 
-        const user = await UserModel.findById({ _id: userId }).populate("movies");
+        const user = await prisma.user.findUnique({
+
+            where: {
+
+                id: userId //Le decimos que cuando el id sea igual al userId nos lo traiga
+            }
+        })
 
         res.status(200).send(user);
 
@@ -73,18 +78,20 @@ export const updateUser = async (req: Request, res: Response) => {
 
     try {
 
-        const updatedUser = await UserModel.findByIdAndUpdate({ _id: userId },// una vez creado el usuario esto nos va a devolver los datos del usuario en mongo, y ya los podriamos manipular o mandar al usuario por ejemplo
 
-            {
-                $set: {
+        const updatedUser = await prisma.user.update({
 
-                    name: name,
-                    email: email,
-                    password: password,
+            where: {
 
-                }
-            }, { new: true }) // la propiedad new se pone en true para asegurar de que devuelva el objeto una vez ya actualizado
+                id: userId
+            },
+            data: {
 
+                name,
+                email,
+                password
+            }
+        })
         res.status(200).send(updatedUser)
 
     } catch (error) {
@@ -102,9 +109,15 @@ export const removeUser = async (req: Request, res: Response) => {
 
     try {
 
-        const userDeleted = await UserModel.findByIdAndDelete(userId) // una vez creado el usuario esto nos va a devolver los datos del usuario en mongo, y ya los podriamos manipular o mandar al usuario por ejemplo
+        await prisma.user.delete({ // Aqui no haria falta meterlo en una constante porque prisma no nos va a devolver el usuario borrado, simplemente te devuelve los elementos borrados, si ha sido uno pues te devolvera 1
 
-        res.status(200).send(userDeleted)
+            where: {
+
+                id: userId
+            }
+        })
+
+        res.status(204).send('User was deleted')
 
     } catch (error) {
 

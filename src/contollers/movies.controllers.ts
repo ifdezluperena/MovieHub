@@ -1,60 +1,63 @@
-import { Request,Response } from "express"
+import { Request, Response } from "express"
 import { send } from "process"
 import MoviesModel from "../model/movies.model";
 import UserModel from "../model/user.model";
+import prisma from "../db/clientPrisma";
 
 
- export const createMovie =  async (req: Request,res: Response) =>{
+export const createMovie = async (req: Request, res: Response) => {
 
-    const {name, url, score} = req.body;
+    const { name, url, score } = req.body;
 
-    const {userId} = req.params;
+    const { userId } = req.params;
 
-    try{
+    try {
 
-        const newMovie = await MoviesModel.create({
+        const newMovie = await prisma.movie.create({
 
-            name,
-            url,
-            score
+            data: {
+                name: name,
+                url: url,
+                score: score,
+                User: {
+                    connect: {
+                        id: userId
+                    }
+                }
+            }
         });
 
-        await UserModel.findByIdAndUpdate({_id : userId},{
 
-            $push : {
-                movies : newMovie._id
-            }
-        },{new : true})
 
         res.status(201).send(newMovie)
 
-    } catch (error){
+    } catch (error) {
 
         res.status(500).send(error)
     }
-     
+
 }
 
-export const updateMovie = (req: Request,res: Response) =>{
+export const updateMovie = (req: Request, res: Response) => {
 
-    res.status(200).send({msg:"Movie updated"})
-    
+    res.status(200).send({ msg: "Movie updated" })
+
 }
 
-export const removeMovie = (req: Request,res: Response) =>{
+export const removeMovie = (req: Request, res: Response) => {
 
-        res.status(200).send({msg:"Movie removed"})
-    
+    res.status(200).send({ msg: "Movie removed" })
+
 }
 
-export const getAllMovies = (req: Request,res: Response) =>{
+export const getAllMovies = (req: Request, res: Response) => {
 
-        res.status(200).send({msg: "All movies"})
-    
+    res.status(200).send({ msg: "All movies" })
+
 }
 
-export const getMovieById = (req: Request,res: Response) =>{
+export const getMovieById = (req: Request, res: Response) => {
 
-    res.status(200).send({msg: "Movie  by id"})
-    
+    res.status(200).send({ msg: "Movie  by id" })
+
 }
