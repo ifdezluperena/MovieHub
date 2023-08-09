@@ -22,6 +22,7 @@ export const createMovie = async (req: Request, res: Response) => {
                         id: userId
                     }
                 }
+
             }
         });
 
@@ -114,6 +115,13 @@ export const getMovieById = async (req: Request, res: Response) => {
 
             where: {
                 id: movieId
+            },
+            include: {
+                genre: {
+                    select: {
+                        name: true
+                    }
+                }
             }
         })
 

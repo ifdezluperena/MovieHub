@@ -25,8 +25,35 @@ model Movie {
   name      String
   url       String   @unique
   score     DateTime
+  genre     Genres[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   User      User?    @relation(fields: [userId], references: [id]) // relacion entre movies y users, se crea automaticamente al meter el campo movies en el usermodel
   userId    String?  @db.ObjectId
+}
+
+model Genres {
+  id      String    @id @default(auto()) @map("_id") @db.ObjectId
+  name    GenreName
+  Movie   Movie?    @relation(fields: [movieId], references: [id])
+  movieId String?   @db.ObjectId
+}
+
+enum GenreName {
+  Accion
+  Adulto
+  Animacion
+  Aventura
+  Belico
+  Crimen
+  Comedia
+  Drama
+  Fantasia
+  Ficcion
+  Historico
+  Mudo
+  Musical
+  Suspense
+  Terror
+  Western
 }

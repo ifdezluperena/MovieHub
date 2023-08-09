@@ -4,20 +4,17 @@ import { createMovie, updateMovie, removeMovie, getAllMovies, getMovieById } fro
 import { Router } from "express";
 import { check } from '../middleware/check.middleware';
 
-const MovieRouter = Router();
+const MovieRoutes = Router();
 
-MovieRouter.post("/:userId", check, createMovie); // Seguido del middleware check, podemos poner cuantos mas queramos, es mejor que los middleware sean especificos y crear mas , en vez dde hacer uno que compruebe varias condisiones
+MovieRoutes
+    .post("/:userId", check, createMovie) // Seguido del middleware check, podemos poner cuantos mas queramos, es mejor que los middleware sean especificos y crear mas , en vez dde hacer uno que compruebe varias condisiones
 
-MovieRouter.patch("/:movieId", updateMovie);
+    .patch("/:movieId", updateMovie)
 
-MovieRouter.delete("/:movieId", removeMovie);
+    .delete("/:movieId", removeMovie)
 
-MovieRouter.get("/:movieId", getMovieById);
+    .get("/:movieId", getMovieById)
 
-MovieRouter.get("/", getAllMovies);
+    .get("/", getAllMovies);
 
-const userRouter = Router();
-
-
-
-export default MovieRouter
+export default MovieRoutes

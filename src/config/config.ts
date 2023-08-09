@@ -8,37 +8,37 @@ type TConfig = {
 
 type EnviromentConfig = {
     app: AppConfig
-    db : MongodbConfig
+    db: MongodbConfig
 
 }
 
 type AppConfig = {
 
-    PORT : string | number
+    PORT: string | number
 }
 
 type MongodbConfig = {
 
-    URI : string 
+    URI: string
 }
 
-const ENV: string = process.env.NODE_ENV ?? 'development' 
+const ENV: string = process.env.NODE_ENV ?? 'development'
 
 
-const CONFIG :TConfig = {
-    development : {
-        app : {
-            PORT:process.env.PORT || 4001
+const CONFIG: TConfig = {
+    development: {
+        app: {
+            PORT: process.env.PORT || 8081
         },
-        db : {
+        db: {
             URI: process.env.MONGO_DB_URI || 'mongodb://localhost:27017/express'
         }
     },
-    production : {
-        app : {
-            PORT:process.env.PORT || 4002
+    production: {
+        app: {
+            PORT: process.env.PORT || 8082
         },
-        db : {
+        db: {
             URI: process.env.MONGO_DB_URI || 'mongodb://localhost:27017/express'
         }
     }
