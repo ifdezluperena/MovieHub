@@ -6,6 +6,6 @@ const GenreRoutes = Router();
 GenreRoutes
 
     .get("/", getAllGenres)
-    .get("/.genreId", getGenreById)
+    .get("/:genreId", getGenreById)
 
 export default GenreRoutes

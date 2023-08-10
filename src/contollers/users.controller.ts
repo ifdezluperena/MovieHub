@@ -4,7 +4,7 @@ import prisma from "../db/clientPrisma";
 export const createUser = async (req: Request, res: Response) => {
 
     const { name, email, password } = req.body;
-
+    console.log(name)
     try {
 
         if (!name || !email || !password) {
@@ -61,9 +61,10 @@ export const getUserById = async (req: Request, res: Response) => {
             include: {
                 movies: {
                     select: {
-                        name: true
+                        name: true,
+                        genre: true
                     }
-                } // que me invluya las peliculas asociadas a ese usuario, pero que muestre solamente el nombre de la pelicula
+                } // que me incluya las peliculas asociadas a ese usuario, pero que muestre solamente el nombre de la pelicula
             }
         })
 
