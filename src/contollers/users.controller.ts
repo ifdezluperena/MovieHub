@@ -4,7 +4,7 @@ import prisma from "../db/clientPrisma";
 export const createUser = async (req: Request, res: Response) => {
 
     const { name, email, password } = req.body;
-    console.log(name)
+
     try {
 
         if (!name || !email || !password) {
@@ -16,9 +16,9 @@ export const createUser = async (req: Request, res: Response) => {
         const newUser = await prisma.user.create({
 
             data: {
-                name: name,
-                email: email,
-                password: password
+                name,
+                email,
+                password
             }
 
         }) // una vez creado el usuario esto nos va a devolver los datos del usuario en mongo, y ya los podriamos manipular o mandar al usuario por ejemplo

@@ -6,11 +6,9 @@ import morgan from 'morgan'
 
 const app: Express = express();
 
-app.use(express.json) //para que express sepa cuando le mando informacion en el body de nuestra peticion, que lea el formato
+app.use(express.json()) //para que express sepa cuando le mando informacion en el body de nuestra peticion, que lea el formato
 app.use(morgan("dev"))
-app.get("/", (req, res) => {
-    res.status(200).send("hola")
-})
+
 
 app.use("/movies", MovieRoutes)
 app.use("/users", UsersRoutes)

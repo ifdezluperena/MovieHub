@@ -3,6 +3,8 @@ import prisma from "../db/clientPrisma"
 
 export const getAllGenres = async (req: Request, res: Response) => {
 
+    const { name } = req.body;
+
     try {
 
         const allGenres = await prisma.genres.findMany()
